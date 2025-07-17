@@ -1,3 +1,5 @@
+const Bootcamp = require('../models/Bootcamp');
+
 // @desc   Get all bootcamps
 //route     GET /api/v1/bootcamps
 //@access   Public
@@ -20,9 +22,20 @@ exports.getBootcamp = (req, res, next) => {
 //route     POST /api/v1/bootcamps
 //@access   Private
 
-exports.createBootcamp = (req, res, next) => {
-    res.status(200).json({ suceess: true, msg: 'Create new bootcamp'});
-}
+// exports.createBootcamp = (req, res, next) => {
+//     console.log(req.body);
+
+//     res.status(200).json({success: true, msg: 'Create new bootcamp'})
+// };
+// THE ERROR MESSAGE COMES FROM THIS CODE BLOCK !!
+exports.createBootcamp = async (req, res, next) => {
+   const bootcamp = await Bootcamp.create(req.body);
+
+   res.status(201).json({
+    succeess: true,
+    data: bootcamp
+   });
+};
 
 
 // @desc   Update bootcamp
