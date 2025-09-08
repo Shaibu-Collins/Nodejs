@@ -10,7 +10,7 @@ dotenv.config({ path: './config/config.env' });
 const Bootcamp = require('./models/Bootcamp');
 //const { error } = require('console');
 
-const Course = require('./models/course');
+const Course = require('./models/Course');
 
 // Connect to DB
 mongoose.connect(process.env.MONGO_URI,{

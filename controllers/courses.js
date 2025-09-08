@@ -7,25 +7,37 @@ const Bootcamp = require('../models/Bootcamp');
 //route     GET /api/v1/courses
 //route     GET /api/v1/bootcamps/:bootcampId/courses
 //@access   Public
+
+
+// exports.getCourses = asyncHandler(async (req, res, next) => {
+//   if (req.params.bootcampId) {
+//     const courses = await Course.find({ bootcamp: req.params.bootcampId });
+
+//     return res.status(200).json({
+//       success: true,
+//       count: courses.length,
+//       data: courses
+//     });
+//   } else {
+//     res.status(200).json(res.advancedResults);
+//   }
+// });
+
+
 exports.getCourses = asyncHandler(async (req, res, next) => {
-    let query;
 
     if(req.params.bootcampId) {
-        query = Course.find({ bootcamp: req.params.bootcampId });
+        const courses = await Course.find({ bootcamp: req.params.bootcampId });
+
+        return res.status(200).json({
+            success: true,
+            count: courses.length,
+            data: courses
+        })
     } else {
-        query = Course.find().populate({
-            path: 'bootcamp',
-            select: 'name description'
-        });
+      res.status(200).json(res.advancedResults);
     }
 
-    const courses = await query;
-
-    res.status(200).json({
-        success: true,
-        count: courses.length,
-        data: courses
-    })
 });
 
 // @desc   Get single course
@@ -63,7 +75,9 @@ exports.addCourse = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse(`No bootcamp with the id of ${req.params.bootcampId}`), 404);
    }
 
-   const course = Course.create(req.body);
+
+
+   const course = await Course.create(req.body);
 
     res.status(200).json({
         success: true,
@@ -82,7 +96,7 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse(`No course with the id of ${req.params.id}`), 404);
    }
 
-   course = Course.findByIdAndUpdate(req.params.id, req.body, {
+   course = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
    });
@@ -104,7 +118,7 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse(`No course with the id of ${req.params.id}`), 404);
    }
 
-   await course.deleteOne();
+   await course.deleteOne();  // for deprecated reason I can't use .remove()
 
   
 
@@ -113,3 +127,4 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
         data: {}
     })
 });
+
